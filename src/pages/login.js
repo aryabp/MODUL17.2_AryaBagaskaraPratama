@@ -11,88 +11,116 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
+//import { RedirectSource } from 'react-avatar';
 
- 
+
+//import { getNextKeyDef } from '@testing-library/user-event/dist/keyboard/getNextKeyDef';
+
 const theme = createTheme();
-  
+
 const Login = () => {
-    const handleSubmit = async (event) => {
-      event.preventDefault();
-      const data = new FormData(event.currentTarget);
-      console.log({
+
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    /*
+    console.log({
+      email: data.get('email'),
+      password: data.get('password'),
+    });
+    */
+    // Tambahkan kode di bawah ini untuk mengambil data dari localstorage
+    // 1. Lakukan Axios POST ke backend pada endpoint /login di bawah ini,
+    // dengan parameter 'email' dan 'pass' yang didapat dari form (clue ada pada line 23 dan 24).
+    // simpan 'token' dan 'user' ke localStorage
+    // jika berhasil, set localStorage 'user' dan 'token' serta redirect ke halaman profile
+    // jika gagal, tampilkan alert 'Login Gagal'
+    try{
+      axios.defaults.withCredentials = true;
+      await axios.post('http://localhost:1004/login', {
         email: data.get('email'),
         password: data.get('password'),
-      });
+        withCredentials: true
+      })
+        .then((response) => {
+          alert('Login Berhasil')
+          console.log(response)
+          localStorage.setItem('user',response.data.username)
+          localStorage.setItem('token',response.data.token)
+          localStorage.setItem('email',response.data.email)
+          window.location.href = '/profile'
+          
+        })
+      
+    }catch(e){
+      console.log(e)
+      alert('Login Gagal');
+    }
+    
 
-      // Tambahkan kode di bawah ini untuk mengambil data dari localstorage
-      // 1. Lakukan Axios POST ke backend pada endpoint /login di bawah ini,
-      // dengan parameter 'email' dan 'pass' yang didapat dari form (clue ada pada line 23 dan 24).
-      // simpan 'token' dan 'user' ke localStorage
-      // jika berhasil, set localStorage 'user' dan 'token' serta redirect ke halaman profile
-      // jika gagal, tampilkan alert 'Login Gagal'
+  };
 
-    };
-  
-    return (
-      <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <Box
-            sx={{
-              marginTop: 8,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-            }}
-          >
-            <Typography component="h1" variant="h5">
-              Sign in
-            </Typography>
-            <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Sign In
-              </Button>
-              <Grid container>
-                <Grid item>
-                  <Link href="/register" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-                </Grid>
+  return (
+    <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+            />
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign In
+            </Button>
+            <Grid container>
+              <Grid item>
+                <Link href="/register" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
               </Grid>
-            </Box>
+            </Grid>
           </Box>
-        </Container>
-      </ThemeProvider>
-    );
-  }
+        </Box>
+      </Container>
+    </ThemeProvider>
+  );
+}
 
 export default Login

@@ -31,16 +31,27 @@ const Home = () => {
     // Modifikasi kode di bawah ini untuk mengambil data dari localstorage
     React.useEffect(() => {
         // 1. Ambil data 'user' dan 'token' dari localstorage
-
+        const user = localStorage.getItem('user')
+        const token = localStorage.getItem('token')
         // 2. Lempar ke halaman login bila user atau token tidak ada
-
+        if(user==undefined){
+            window.location.href='/login'
+        }
         // 3. definisikan fungsi verifikasi token
         // fungsi ini akan melakukan HTTP POST request ke endpoint
         // /verify pada backend dengan mengirimkan token yang didapat dari localstorage.
         // bila response status-nya 200 dan id dari response sama dengan id user pada localstorage,
         // set isLogin menjadi true. bila tidak, redirect ke halaman login
-        
+        const verifikasi = () =>{
+            axios.post(`http://localhost:1004/verify`,{jwt:token}).then(
+                (a)=>{console.log(a)
+                    isLogin=true}
+                
+            )
+
+        }
         // 4. Panggil fungsi verifikasi token
+        verifikasi()
     }, [])
 
     const handleToHome = () => {

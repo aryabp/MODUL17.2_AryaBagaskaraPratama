@@ -38,13 +38,22 @@ const Profile = () => {
     // Modifikasi kode di bawah ini untuk mengambil data dari localstorage
     React.useEffect(() => {
         // 1. Ambil data user dari localstorage
+        const email = localStorage.getItem('email')
+        const token = localStorage.getItem('token')
 
         // 2. buat fungsi verifikasi token yang sama seperti di halaman home
+        const verifikasi = () =>{
+          axios.post(`http://localhost:1004/verify`,{jwt:token,email:email}).then(
+              (a)=>{return a}
+              
+        )
 
+      }
         // panggil fungsi verifikasi token di bawah sini
-
+        const semen = verifikasi()
         // 3. Lakukan setUser dengan data user yang didapat dari localstorage
-
+        setUser(semen)
+        setIsLogin(true)
     }, [])
 
     const handleToHome = () => {
@@ -57,7 +66,7 @@ const Profile = () => {
 
         // 2. Hit endpoint logout dengan body jwt yang didapat dari localstorage
         //   dan setelah berhasil, beri alert sukses
-        await axios.post('http://localhost:5000/logout', {
+        await axios.post('http://localhost:1004/logout', {
             jwt: localStorage.getItem('token')
         })
         .then((res) => {
