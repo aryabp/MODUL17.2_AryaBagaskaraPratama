@@ -12,7 +12,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 //import { RedirectSource } from 'react-avatar';
-
+require("dotnet").config()
 
 //import { getNextKeyDef } from '@testing-library/user-event/dist/keyboard/getNextKeyDef';
 
@@ -38,7 +38,7 @@ const Login = () => {
     // jika gagal, tampilkan alert 'Login Gagal'
     try{
       axios.defaults.withCredentials = true;
-      await axios.post('http://localhost:1004/login', {
+      await axios.post(process.env.REACT_APP_URL_BACKEND +'/login', {
         email: data.get('email'),
         password: data.get('password'),
         withCredentials: true

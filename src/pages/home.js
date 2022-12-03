@@ -8,6 +8,7 @@ import axios from 'axios'
 import Button from '@mui/material/Button';
 import { Grid } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+require("dotnet").config()
 
 const theme = createTheme();
 
@@ -43,7 +44,7 @@ const Home = () => {
         // bila response status-nya 200 dan id dari response sama dengan id user pada localstorage,
         // set isLogin menjadi true. bila tidak, redirect ke halaman login
         const verifikasi = () =>{
-            axios.post(`http://localhost:1004/verify`,{jwt:token}).then(
+            axios.post(process.env.REACT_APP_URL_BACKEND +'/verify',{jwt:token}).then(
                 (a)=>{console.log(a)
                     isLogin=true}
                 

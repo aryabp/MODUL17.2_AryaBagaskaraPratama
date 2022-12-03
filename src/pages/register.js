@@ -29,7 +29,7 @@ const Register = () => {
     // jika gagal, tampilkan alert 'Register Gagal'
     try{
       axios.defaults.withCredentials = true;
-      await axios.post('http://localhost:1004/register', {
+      await axios.post(process.env.REACT_APP_URL_BACKEND +'/register', {
         username: data.get('username'),
         email: data.get('email'),
         password: data.get('password'),

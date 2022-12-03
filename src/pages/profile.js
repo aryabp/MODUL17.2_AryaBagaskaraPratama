@@ -43,7 +43,7 @@ const Profile = () => {
 
         // 2. buat fungsi verifikasi token yang sama seperti di halaman home
         const verifikasi = () =>{
-          axios.post(`http://localhost:1004/verify`,{jwt:token,email:email}).then(
+          axios.post(process.env.REACT_APP_URL_BACKEND +`/verify`,{jwt:token,email:email}).then(
               (a)=>{return a}
               
         )
@@ -66,7 +66,7 @@ const Profile = () => {
 
         // 2. Hit endpoint logout dengan body jwt yang didapat dari localstorage
         //   dan setelah berhasil, beri alert sukses
-        await axios.post('http://localhost:1004/logout', {
+        await axios.post(process.env.REACT_APP_URL_BACKEND +'/logout', {
             jwt: localStorage.getItem('token')
         })
         .then((res) => {
