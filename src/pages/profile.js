@@ -38,22 +38,28 @@ const Profile = () => {
     // Modifikasi kode di bawah ini untuk mengambil data dari localstorage
     React.useEffect(() => {
         // 1. Ambil data user dari localstorage
-        const email = localStorage.getItem('email')
-        const token = localStorage.getItem('token')
-
+        const user = localStorage.getItem('user')
         // 2. buat fungsi verifikasi token yang sama seperti di halaman home
-        const verifikasi = () =>{
-          axios.post(process.env.REACT_APP_URL_BACKEND +`/verify`,{jwt:token,email:email}).then(
-              (a)=>{return a}
-              
-        )
-
-      }
+        function verifyToken(){
+            axios.post(`${process.env.REACT_APP_URL_BACKEND}/verify`, {
+                token:localStorage.getItem('token'),
+                withCredentials: true})
+            .then(function (response) {
+                if(response.status(200)&&(response.data.id===localStorage.getItem('id'))){
+                    setIsLogin(true)
+                    alert('Register Berhasil')
+                    console.log(response)
+                }else{
+                    window.location.href = '/login';
+                }
+          })
+        }
         // panggil fungsi verifikasi token di bawah sini
-        const semen = verifikasi()
+        verifyToken()
         // 3. Lakukan setUser dengan data user yang didapat dari localstorage
-        setUser(semen)
-        setIsLogin(true)
+        setUser(curVal=>({
+          ...curVal,
+        }))
     }, [])
 
     const handleToHome = () => {
@@ -66,7 +72,7 @@ const Profile = () => {
 
         // 2. Hit endpoint logout dengan body jwt yang didapat dari localstorage
         //   dan setelah berhasil, beri alert sukses
-        await axios.post(process.env.REACT_APP_URL_BACKEND +'/logout', {
+        await axios.post(`${process.env.REACT_APP_URL_BACKEND}/logout`, {
             jwt: localStorage.getItem('token')
         })
         .then((res) => {

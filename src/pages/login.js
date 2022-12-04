@@ -11,54 +11,52 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
-//import { RedirectSource } from 'react-avatar';
-require("dotnet").config()
 
-//import { getNextKeyDef } from '@testing-library/user-event/dist/keyboard/getNextKeyDef';
 
 const theme = createTheme();
 
 const Login = () => {
-
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    /*
     console.log({
       email: data.get('email'),
       password: data.get('password'),
     });
-    */
+
     // Tambahkan kode di bawah ini untuk mengambil data dari localstorage
     // 1. Lakukan Axios POST ke backend pada endpoint /login di bawah ini,
     // dengan parameter 'email' dan 'pass' yang didapat dari form (clue ada pada line 23 dan 24).
     // simpan 'token' dan 'user' ke localStorage
     // jika berhasil, set localStorage 'user' dan 'token' serta redirect ke halaman profile
     // jika gagal, tampilkan alert 'Login Gagal'
-    try{
-      axios.defaults.withCredentials = true;
-      await axios.post(process.env.REACT_APP_URL_BACKEND +'/login', {
-        email: data.get('email'),
-        password: data.get('password'),
-        withCredentials: true
-      })
-        .then((response) => {
-          alert('Login Berhasil')
-          console.log(response)
-          localStorage.setItem('user',response.data.username)
-          localStorage.setItem('token',response.data.token)
-          localStorage.setItem('email',response.data.email)
-          window.location.href = '/profile'
-          
-        })
-      
-    }catch(e){
-      console.log(e)
-      alert('Login Gagal');
-    }
-    
 
+    axios.post(`${process.env.REACT_APP_URL_BACKEND}/login`, JSON.stringify({
+      "email" : data.get('email'),
+      "password" : data.get('password')
+    }),
+      {
+        
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    )
+      .then(function (response) {
+        console.log(response)
+        const token = response.data.token
+        const user = response.data.user
+        const id = response.data.id
+        localStorage.setItem('token', token)
+        localStorage.setItem('user', user)
+        localStorage.setItem('id', id)
+        /*window.location.href = '/profile';*/
+      })
+      .catch(function (error) {
+        console.log(error);
+        alert('Login Gagal')
+      });
   };
 
   return (

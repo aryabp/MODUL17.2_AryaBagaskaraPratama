@@ -8,7 +8,6 @@ import axios from 'axios'
 import Button from '@mui/material/Button';
 import { Grid } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-require("dotnet").config()
 
 const theme = createTheme();
 
@@ -35,24 +34,31 @@ const Home = () => {
         const user = localStorage.getItem('user')
         const token = localStorage.getItem('token')
         // 2. Lempar ke halaman login bila user atau token tidak ada
-        if(user==undefined){
-            window.location.href='/login'
+        if(!(user && token)){
+            window.location.href = '/login';
         }
         // 3. definisikan fungsi verifikasi token
         // fungsi ini akan melakukan HTTP POST request ke endpoint
         // /verify pada backend dengan mengirimkan token yang didapat dari localstorage.
         // bila response status-nya 200 dan id dari response sama dengan id user pada localstorage,
         // set isLogin menjadi true. bila tidak, redirect ke halaman login
-        const verifikasi = () =>{
-            axios.post(process.env.REACT_APP_URL_BACKEND +'/verify',{jwt:token}).then(
-                (a)=>{console.log(a)
-                    isLogin=true}
-                
-            )
-
+        function verifyToken(){
+            axios.post('http://localhost:3000/verify', {
+            token:localStorage.getItem('token'),
+            withCredentials: true})
+        .then(function (response) {
+            if(response.status(200)&&(response.data.id===localStorage.getItem('id'))){
+                setIsLogin(true)
+                alert('Register Berhasil')
+                console.log(response)
+            }else{
+                window.location.href = '/login';
+            }
+        })
         }
+        
         // 4. Panggil fungsi verifikasi token
-        verifikasi()
+        verifyToken()
     }, [])
 
     const handleToHome = () => {
@@ -61,7 +67,7 @@ const Home = () => {
 
     if(!isLogin) {
         return (
-            <ThemeProvider theme={theme}>
+            <ThemeProvider data-testid="home-1" theme={theme}>
                 <Container component="main" maxWidth="xs">
                     <CssBaseline />
                     <Box

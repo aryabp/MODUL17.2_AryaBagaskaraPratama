@@ -12,43 +12,37 @@ import axios from 'axios';
 
 // Abaikan kode di bawah ini
 const theme = createTheme();
-
+  
 const Register = () => {
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      username: data.get('username'),
-      pass: data.get('password'),
-      email: data.get('email'),
-    });
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      const data = new FormData(event.currentTarget);
+      console.log({
+        username: data.get('username'),
+        pass: data.get('password'),
+        email: data.get('email'),
+      });
+
     // Tambahkan kode di bawah ini untuk mengambil data dari localstorage
     // 1. Lakukan Axios POST ke API Register pada backend di bawah ini
     // body yang digunakan adalah username, email, dan password
     // jika berhasil, redirect ke halaman login
     // jika gagal, tampilkan alert 'Register Gagal'
-    try{
-      axios.defaults.withCredentials = true;
-      await axios.post(process.env.REACT_APP_URL_BACKEND +'/register', {
-        username: data.get('username'),
+    axios.post(`${process.env.REACT_APP_URL_BACKEND}/register`, {
+        username:data.get('username'),
         email: data.get('email'),
         password: data.get('password'),
-        withCredentials: true
+        withCredentials: true})
+      .then(function (response) {
+        alert('Register Berhasil')
+        console.log(response)
+        window.location.href = '/login';
       })
-        .then((response) => {
-          alert('Register Berhasil')
-          console.log(response)
-          window.location.href = '/login'
-          
-        })
-      
-    }catch(e){
-      console.log(e)
-      alert('Register Gagal');
+      .catch(function (error) {
+        console.log(error);
+        alert('Login Gagal')
+      });
     }
-  }
-    
-
     return (
       <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xs">
@@ -116,6 +110,5 @@ const Register = () => {
       </ThemeProvider>
     );
   }
-
 
 export default Register

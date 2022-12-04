@@ -36,3 +36,31 @@
     transform: rotate(360deg);
   }
 }
+.NotFound{
+  color: #f0f0f0;
+  background-image: url('./img/desert.jpg ');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  display: inline-block; /* shrink to fit */
+  width: 100%;           /* whatever width you like */
+  position: relative;
+}
+.NotFound::after {
+  padding-top: 56.25%; /* percentage of containing block _width_ */
+  display: block;
+  content: '';
+}
+.contentNotFound {
+  padding-left: 25%;
+  padding-top: 10%;
+  position: absolute;
+  top: 0; bottom: 0; right: 0; left: 0;  /* follow the parent's edges */
+}
+.contentNotFound p{
+  font-size: 250%;
+}
+.contentNotFound p span{
+  font-size: 200%;
+  color: red;
+}
